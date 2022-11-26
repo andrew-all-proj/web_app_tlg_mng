@@ -1,0 +1,5 @@
+venv
+check_config
+.idea
+__pycashe__
+/static/media

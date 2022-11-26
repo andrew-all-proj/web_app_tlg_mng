@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<h2>Заголовок второго уровня</h2>
+{% endblock %}
+
+{% block body %}
+<h2>Информация о каналах</h2>
+    {% for i in info %}
+        <div>
+            Название канала: {{i.name_chanel}}<br>
+            Ссылка на канала: {{i.link_chanel}}<br>
+            id канала: {{i.id_telegram}}<br>
+        </div>
+    {% endfor %}
+{% endblock %}

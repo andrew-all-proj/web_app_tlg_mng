@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <h2>Manage TLG</h2>
+{% endblock %}
+
+{% block body %}
+    <h2>Создать расписание:</h2>
+    {% for cat, msg in get_flashed_messages(True) %}
+        <div class="flash {{cat}}">{{msg}}</div>
+    {% endfor %}
+    <form action="{{url_for('create_schedule')}}" method="post" name="sendform" enctype="multipart/form-data">
+        <label>Выберите канал:</label>
+        <select name="id_chanel" style="width: 200px; height 20px;" required>
+            {% for chanel in chanels %}
+	        <option value="{{chanel.id_chanel}}">{{chanel.name_chanel}}</option>
+            {% endfor %}
+        </select>
+        <p><label>С какого числа:</label>
+            <input type="date" name="start_date" required>
+            <input type="time" name="start_time" required></p>
+        <p><label>По какое число:</label>
+        <input type="date" name="stop_date" required>
+        <input type="time" name="stop_time" required></p>
+        <p><label>Период мин:</label>
+        <input type="text" name="period" value="50" required pattern="[0-9]{0,3}"></p>
+        <p>Выберите метки:</p>
+        <table>
+            {% set ns = namespace(counter=false) %}
+            <tr>
+            {% for tag in tags %}
+                <td>
+	            <input type="checkbox" name="tags" value="{{tag.id_tag}}"
+                   style="width:30px; vertical-align:top">
+                <label for="tags">{{tag.name}}</label>
+                </td>
+            {% set ns.counter = ns.counter+1 %}
+            {% if ns.counter%6 == 0 %}
+                </tr><tr>
+            {% endif %}
+            {% endfor %}
+               </tr>
+         </table>
+        <input type="submit" value="Создать">
+    </form>
+
+
+{% endblock %}

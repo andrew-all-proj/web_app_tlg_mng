@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link type="text/css" href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet"/>
+    <title>Manager TLG</title>
+    {% block title -%}
+
+    {% endblock %}
+</head>
+<body>
+<header style="overflow: hidden;">
+    <div style="width: 100%;">
+        <div style="float: left; width: 70%; height: 100px;">
+            <h1>Manager TLG</h1></div>
+        <div style="float: left; width: 15%; height: 100px;">
+            <h3>Manager TLG</h3>
+            <p>Версия: {{ versionGet.version_web }}</p></div>
+    </div>
+    </div>
+</header>
+<aside>
+    <h2>МЕНЮ</h2>
+    <p><a class="link_aside" href="./about_chanels">Информация о каналax:</a></p>
+    <p><a class="link_aside" href="./select_channel">Расписание:</a></p>
+    <p><a class="link_aside" href="./add_event">Добавить событие:</a></p>
+    <p><a class="link_aside" href="./create_schedule">Сформировать расписание:</a></p>
+    <p><a class="link_aside" href="./add_media">Добавить медиа:</a></p>
+    <p><a class="link_aside" href="./tags">Метки:</a></p>
+    <p><a class="link_aside" href="./logout">Выход</a></p>
+</aside>
+
+<main>
+    {% block body %}{% endblock%}
+</main>
+<script type="text/javascript" src="{{ url_for('static', filename = 'js/confirm_windows.js') }}"></script>
+
+</body>
+</html>

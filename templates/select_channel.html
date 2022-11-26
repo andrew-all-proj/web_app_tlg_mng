@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block body %}
+    <h3>События</h3>
+    {% for cat, msg in get_flashed_messages(True) %}
+        <div class="flash {{cat}}">{{msg}}</div>
+    {% endfor %}
+    <form action="{{url_for('schedule')}}" method="post" name="sendform" enctype="multipart/form-data">
+     <label>Выберите канал:</label>
+        <select name="id_chanel" style="width: 200px; height 20px;" required>
+            {% for chanel in chanels %}
+	        <option value="{{chanel.id_chanel}}">{{chanel.name_chanel}}</option>
+            {% endfor %}
+        </select>
+        <p><label>С какого числа:</label>
+            <input type="date" name="date_start" required>
+            <input type="time" name="time_start" required></p>
+        <p><label>По какое число:</label>
+        <input type="date" name="date_stop" required>
+        <input type="time" name="time_stop" required></p>
+        <input type="submit" value="Отправить">
+     </form>
+
+{% endblock %}
+
+

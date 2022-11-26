@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% endblock %}
+
+{% block body %}
+    <h2>События</h2>
+    {% for cat, msg in get_flashed_messages(True) %}
+        <div class="flash {{cat}}">{{msg}}</div>
+    {% endfor %}
+    <h3>Выберите событие:</h3>
+    {% for record in records %}
+        <div style="width:100%; height:1px; clear:both;"></div>
+            <div class="line_block_one">
+                {% if record.TypeMedia.type_media == 'video' %}
+                    <video style="height: 130px; border: 1px solid #000; margin: 5px" src="static/media/{{record.TypeMedia.path_dir}}/{{record.MediaContens.local_path}}">
+                {% else %}
+                    <img src="static/media/{{record.TypeMedia.path_dir}}/{{record.MediaContens.local_path}}" height="130">
+                {% endif %}
+            </div>
+            <div class="line_block_two">
+                <form action="{{url_for('event')}}" method="post" name="sendform" id="form{{record.Events.id_event}}">
+                <a href="#" onclick="document.getElementById('form{{record.Events.id_event}}').submit(); return false;">
+                id media: {{record.Events.id_media}}<br>
+                Старт: {{record.Events.date_start}}<br>
+                Стоп: {{record.Events.date_stop}}<br>
+                Тип медиа: {{record.TypeMedia.type_media}}<br>
+                Подпись: {{record.Events.caption}}<br>
+                Метки: {{record.tags}}</a>
+                <input name="id_event" type="hidden" value='{{record.Events.id_event}}'>
+                </form>
+            </div>
+        <div style="width:100%; height:1px; clear:both;"></div>
+    {% endfor %}
+
+{% endblock %}
+
+

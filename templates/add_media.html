@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    <h2>LYRIX</h2>
+{% endblock %}
+
+{% block body %}
+    <h2>Добавить медиа в БД</h2>
+    {% for cat, msg in get_flashed_messages(True) %}
+        <div class="flash {{cat}}">{{msg}}</div>
+    {% endfor %}
+
+        <form action="{{url_for('add_media')}}" method="post" name="sendform" enctype="multipart/form-data">
+        <p>Выберите файл:</p>
+        <div id="drop_file" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <input name="file"  type="file"  id="fileInput" value=""/><br>
+        <output id="list">
+            <span id="img1"><img style="height: 0px; border: 1px solid #000; margin: 5px" src="" title="файл невыбран"></span>
+        </output>
+        </div>
+        <p>Описание:</p>
+        <input type="text" name="description" style="width: 450px">
+        <p>Выберите метки</p>
+        <table>
+            {% set ns = namespace(counter=false) %}
+            <tr>
+            {% for tag in tags %}
+                <td>
+	            <input type="checkbox" name="tags" value="{{tag.id_tag}}"
+                   style="width:30px; vertical-align:top">
+                <label for="tags">{{tag.name}}</label>
+                </td>
+            {% set ns.counter = ns.counter+1 %}
+            {% if ns.counter%6 == 0 %}
+                </tr><tr>
+            {% endif %}
+            {% endfor %}
+               </tr>
+         </table>
+
+        <input type="submit" value="Сохранить">
+    </form>
+    <script>
+    function handleFileSelect (evt) {
+    // Loop through the FileList and render image files as thumbnails.
+    for (const file of evt.target.files) {
+        // Render thumbnail.
+        const span = document.createElement('span')
+        const src = URL.createObjectURL(file)
+        span.id = 'img1'
+        if (file.type.split('/')[0] == "video"){
+            span.innerHTML =
+            `<video controls style="height: 300px; border: 1px solid #000; margin: 5px"` +
+            `src="${src}" title="${escape(file.name)}">`
+        }else{
+            span.innerHTML =
+            `<img style="height: 300px; border: 1px solid #000; margin: 5px"` +
+            `src="${src}" title="${escape(file.name)}">`}
+
+       document.getElementById('list').replaceChild(span, document.getElementById('img1'))
+    }
+    }
+    function allowDrop(ev) {
+    ev.preventDefault();
+    }
+
+    function drop(ev) {
+    ev.preventDefault();
+	var file = ev.dataTransfer.files[0];
+	const span = document.createElement('span')
+    const src = URL.createObjectURL(file)
+    span.id = 'img1'
+    if (file.type.split('/')[0] == "video"){
+        span.innerHTML =
+        `<video controls style="height: 300px; border: 1px solid #000; margin: 5px"` +
+        `src="${src}" title="${escape(file.name)}">`
+    }else{
+        span.innerHTML =
+        `<img style="height: 300px; border: 1px solid #000; margin: 5px"` +
+        `src="${src}" title="${escape(file.name)}">`}
+    fileInput.files = ev.dataTransfer.files;
+    document.getElementById('list').replaceChild(span, document.getElementById('img1'))
+    }
+    document.getElementById('fileInput').addEventListener('change', handleFileSelect, false);
+
+    </script>
+
+
+{% endblock %}

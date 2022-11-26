@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link type="text/css" href="{{ url_for('static', filename='css/styles.css')}}" rel="stylesheet" />
+    <title>TEST</title>
+</head>
+<body>
+    <header>
+        <h1>MANAGE TLG</h1>
+    </header>
+    <main style="height: 600px;
+    width: 100%;
+    position: absolute;
+    left: 0px;
+    top: 110px;
+    margin: 0px;
+    padding: 30px;
+    border: 2px solid;
+    background-color: Bisque;">
+    {% for cat, msg in get_flashed_messages(True) %}
+        <div class="flash {{cat}}">{{msg}}</div>
+    {% endfor %}
+
+    <form action="" method="post" class="form-contact">
+        <p><label>Логин: </label> <input type="text" name="email" value="" required />
+        <p><label>Пароль: </label> <input type="password" name="psw" value="" required />
+        <p><input type="checkbox" name="remainme" /> Запомнить меня
+        <p><input type="submit" value="Войти" />
+        <hr align=left width="300px">
+    </form>
+    </main>
+
+</body>
+</html>

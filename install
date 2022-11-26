@@ -1,0 +1,73 @@
+#!/bin/bash
+
+dir_web_server=/opt/manage_site;
+
+#create dir for web_server
+if [ -d $dir_web_server ]
+then
+echo "The $dir_web_server directory exists"
+else
+sudo mkdir -p $dir_web_server
+fi
+
+#install virtualenv
+sudo apt-get -y install virtualenv;
+
+sudo cp -r * $dir_web_server;
+
+sudo chmod 777 -R $dir_web_server;
+
+cd $dir_web_server;
+virtualenv venv;
+source venv/bin/activate;
+
+pip3 install -r requirements.txt;
+
+deactivate;
+
+sudo touch /etc/systemd/system/manage_site.service;
+
+conf_demon=`cat <<_EOF_
+[Unit]
+Description=Start web server
+After=network.target
+
+[Service]
+User=pi
+Group=www-data
+WorkingDirectory=/opt/manage_site
+Enviroment="PATH=/opt/manage_site/venv/bin"
+ExecStart=/opt/manage_site/venv/bin/gunicorn  --workers 5 --bind unix:gunicorn.sock -m 007 wsgi:flsite
+Restart=always
+		
+[Install]
+WantedBy=multi-user.target
+_EOF_
+`
+echo "$conf_demon" |  sudo tee /etc/systemd/system/manage_site.service;
+
+sudo apt-get install nginx;
+sudo service nginx start;
+sudo touch /etc/nginx/conf.d/manage_site.conf;
+
+conf_nginx=`cat <<_EOF_
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    server_name web-server.com;
+
+    location / {
+    include proxy_params;
+    proxy_pass http://unix:/opt/manage_site/gunicorn.sock;
+    }
+}
+_EOF_
+`
+echo "$conf_nginx" | sudo tee /etc/nginx/conf.d/manage_site.conf;
+sudo rm /etc/nginx/sites-enabled/default;
+
+sudo nginx -t;
+sudo nginx -s reload;
+
+sudo systemctl enable  manage_site.service;
+sudo systemctl start manage_site.service;

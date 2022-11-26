@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+</html>{% extends 'base.html' %}
+
+{% block title %}
+    <h2>LYRIX</h2>
+{% endblock %}
+
+{% block body %}
+    <h2>Генератор расписания:</h2>
+    {% for cat, msg in get_flashed_messages(True) %}
+        <div class="flash {{cat}}">{{msg}}</div>
+    {% endfor %}
+    {% set ns = namespace(counter=0) %}
+    <form action="{{url_for('save_schedule')}}" method="post" name="sendform" enctype="multipart/form-data">
+        <p>ID КАНАЛА:{{chanel}}</p> <input type="hidden" name="id-chanel" value="{{chanel}}">
+    {% for record in records %}
+        <input type="hidden" name="id-{{ns.counter+1}}" value="{{record.MediaContens.id_media}}">
+    <div style="width:100%; height:1px; clear:both;"></div>
+        <div class="line_block_one">
+        {% if record.TypeMedia.type_media == 'video' %}
+            <video style="height: 130px; border: 1px solid #000; margin: 5px"
+                   src="static/media/{{record.TypeMedia.path_dir}}/{{record.MediaContens.local_path}}">
+        {% else %}
+            <img src="static/media/{{record.TypeMedia.path_dir}}/{{record.MediaContens.local_path}}" height="130">
+        {% endif %}
+        </div>
+        <div class="line_block_two">
+            <p>Сохранить: <input name="save-{{ns.counter+1}}"  type="checkbox" checked> </p>
+            <p>Старт: <input name="date_start-{{ns.counter+1}}"  type="text" value="{{list_time[ns.counter]}}" required></p>
+            {% set ns.counter = ns.counter+1 %}
+            <p>Стоп: <input name="date_stop-{{ns.counter}}"  type="text" value="{{list_time[ns.counter]}}" required></p>
+            <p>Подпись: <input name="description-{{ns.counter}}"  type="text" value=""></p>
+        </div>
+        <div style="width:100%; height:1px; clear:both;"></div>
+    {% set ns.counter = ns.counter+1 %}
+    {% endfor %}
+    <p><input type="submit" value="Сохранить"></p>
+    </form>
+
+{% endblock %}
+
+
